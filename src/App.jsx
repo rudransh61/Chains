@@ -9,6 +9,7 @@ import BlogPosts from './components/BlogPosts';
 import UserBlogs from './components/UserBlogs';
 import BlogPostDetail from './components/BlogPostDetail';
 import Logout from './components/Logout'; // Import the Logout component
+import UpdatePost from './components/UpdatePost'
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/blog/:id" element={<BlogPostDetail />} />
                     <Route path="/logout" element={<Logout />} /> {/* Add route for Logout component */}
                     <Route path="/" element={<BlogPosts />} />
+                    <Route path="/update-post/:id" element={<UpdatePost />} />
                 </Routes>
             </Container>
         </Router>

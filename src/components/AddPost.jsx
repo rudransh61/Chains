@@ -12,6 +12,7 @@ const AddPost = () => {
         e.preventDefault();
         try {
             const user = await getUser();
+            // console.log(user)
             if (user) {
                 const response = await databases.createDocument(
                     '667a93ab0015408da08b', 
@@ -20,12 +21,12 @@ const AddPost = () => {
                     {
                         title,
                         body,
-                        Author: user.$id,
+                        Author: user.name,
                         date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/')
                     },
                     undefined
                 );
-                console.log(response);
+                // console.log(response);
                 alert('Post added successfully!');
             }
         } catch (error) {

@@ -19,7 +19,7 @@ const Login = () => {
 
     return (
         <Container className="mt-5">
-            <h2>Login to BlogSphere</h2>
+            <h2>Login to Chains</h2>
             <Form onSubmit={handleLogin}>
                 <Form.Group className="mb-3">
                     <Form.Label>Email</Form.Label>

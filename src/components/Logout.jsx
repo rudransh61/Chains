@@ -9,7 +9,7 @@ const Logout = () => {
         try {
             await account.deleteSession('current');
             localStorage.removeItem('appwriteToken'); // Remove the token from localStorage
-            history.push('/login'); // Redirect to login page after logout
+            history('/login'); // Redirect to login page after logout
         } catch (error) {
             console.error('Failed to logout', error);
         }

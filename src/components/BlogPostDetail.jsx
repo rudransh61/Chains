@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { databases } from '../appwriteConfig';
+import {marked} from 'marked'; // Import marked library
+import { databases, account } from '../appwriteConfig';
 import { Container, Card } from 'react-bootstrap';
 
 const BlogPostDetail = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const getUser = async () => {
+            try {
+                const user = await account.get();
+                setUserId(user.name);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getUser();
+    }, []);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -24,13 +39,22 @@ const BlogPostDetail = () => {
         return <Container>Loading...</Container>;
     }
 
+    // Function to convert Markdown to HTML
+    const renderMarkdown = (markdown) => {
+        const html = marked(markdown);
+        return { __html: html };
+    };
+
     return (
         <Container className="mt-5">
             <h2>{post.title}</h2>
             <Card className="mb-3">
                 <Card.Body>
-                    <Card.Text>{post.body}</Card.Text>
-                    <Card.Footer className="text-muted">{new Date(post.date_time).toLocaleString()}</Card.Footer>
+                    {/* Render Markdown content */}
+                    <Card.Text dangerouslySetInnerHTML={renderMarkdown(post.body)} />
+                    <Card.Footer className="text-muted">{new Date(post.date_time).toISOString().slice(0, 10).replace(/-/g, '/')}</Card.Footer>
+                    <Card.Footer className="text-muted">By - {post.Author}</Card.Footer>
+                    <Card.Footer className="text-muted">Views - {post.views}</Card.Footer>
                 </Card.Body>
             </Card>
         </Container>
