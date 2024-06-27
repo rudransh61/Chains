@@ -11,7 +11,8 @@ const BlogPosts = () => {
         const fetchPosts = async () => {
             try {
                 const response = await databases.listDocuments('667a93ab0015408da08b', '667a93b3003d6bf2802e');
-                setPosts(response.documents);
+                setPosts(response.documents.reverse());
+                // setPosts(posts.reverse())
             } catch (error) {
                 console.error(error);
             }

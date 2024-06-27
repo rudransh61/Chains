@@ -14,6 +14,7 @@ const BlogPostDetail = () => {
             try {
                 const user = await account.get();
                 setUserId(user.name);
+
             } catch (error) {
                 console.error(error);
             }
@@ -44,7 +45,7 @@ const BlogPostDetail = () => {
         const html = marked(markdown);
         return { __html: html };
     };
-
+ 
     return (
         <Container className="mt-5">
             <h2>{post.title}</h2>

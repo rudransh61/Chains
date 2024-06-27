@@ -22,7 +22,8 @@ const AddPost = () => {
                         title,
                         body,
                         Author: user.name,
-                        date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/')
+                        date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/'),
+                        Author_id : user.$id
                     },
                     undefined
                 );

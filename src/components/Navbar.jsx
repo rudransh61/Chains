@@ -17,6 +17,7 @@ const NavBar = () => {
                         <Nav.Link as={Link} to="/login">Login</Nav.Link>
                         <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
                         <Nav.Link as={Link} to="/logout">Logout</Nav.Link>
+                        <Nav.Link as={Link} to="/settings">Settings</Nav.Link>
                         {/* <Route path="/logout" element={<Logout />} /> Add route for Logout component */}
                     </Nav>
                 </Navbar.Collapse>

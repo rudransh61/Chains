@@ -8,6 +8,7 @@ const UserBlogs = () => {
     const [posts, setPosts] = useState([]);
     const [userId, setUserId] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
+    const [userName, setUserName] = useState(null);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
@@ -16,24 +17,9 @@ const UserBlogs = () => {
             try {
                 const user = await account.get();
                 setUser(user);
-                // console.log(user)
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getUser();
-    }, []);
-
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const user = await account.get();
-                setUserId(user.name);
+                setUserId(user.$id);
                 setUserEmail(user.email);
-                // console.log(user)
+                setUserName(user.name);
             } catch (error) {
                 console.error(error);
             } finally {
@@ -49,7 +35,7 @@ const UserBlogs = () => {
             const fetchPosts = async () => {
                 try {
                     const response = await databases.listDocuments('667a93ab0015408da08b', '667a93b3003d6bf2802e', [
-                        Query.equal('Author', userId),
+                        Query.equal('Author_id', userId),
                     ]);
                     setPosts(response.documents);
                 } catch (error) {
@@ -60,6 +46,20 @@ const UserBlogs = () => {
             fetchPosts();
         }
     }, [userId]);
+
+    const handleDelete = async (postId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this post? This action cannot be undone.');
+        if (confirmDelete) {
+            try {
+                await databases.deleteDocument('667a93ab0015408da08b', '667a93b3003d6bf2802e', postId);
+                setPosts(posts.filter(post => post.$id !== postId));
+                alert('Post deleted successfully.');
+            } catch (error) {
+                console.error('Failed to delete post', error);
+                alert('Failed to delete post.');
+            }
+        }
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -82,7 +82,7 @@ const UserBlogs = () => {
                     <Card>
                         <Card.Body>
                             <Card.Title>Profile</Card.Title>
-                            <Card.Text><strong>Name:</strong> {userId}</Card.Text>
+                            <Card.Text><strong>Name:</strong> {userName}</Card.Text>
                             <Card.Text><strong>Email:</strong> {userEmail}</Card.Text>
                             <Card.Text><strong>Total Blogs:</strong> {posts.length}</Card.Text>
                             {/* You can add more profile details as needed */}
@@ -96,9 +96,17 @@ const UserBlogs = () => {
                             <Card.Body>
                                 <Card.Title>{post.title}</Card.Title>
                                 <Card.Text>{post.body}</Card.Text>
-                                <Card.Text><small>{new Date(post.date_time).toISOString().slice(0, 10).replace(/-/g, '/')}| By-{post.Author} 
-                                | Views : {post.views}</small></Card.Text>
+                                <Card.Text>
+                                    <small>{new Date(post.date_time).toISOString().slice(0, 10).replace(/-/g, '/')} | By-{post.Author} | Views: {post.views}</small>
+                                </Card.Text>
                                 <Button as={Link} to={`/update-post/${post.$id}`} variant="warning">Edit</Button>
+                                <Button
+                                    variant="danger"
+                                    className="ms-2"
+                                    onClick={() => handleDelete(post.$id)}
+                                >
+                                    Delete
+                                </Button>
                                 <Link to={`/blog/${post.$id}`}>
                                     <Button className="ms-2" variant="primary" size="sm">Read More</Button>
                                 </Link>
@@ -109,7 +117,6 @@ const UserBlogs = () => {
             </Row>
         </Container>
     );
-
 };
 
 export default UserBlogs;

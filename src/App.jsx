@@ -10,6 +10,7 @@ import UserBlogs from './components/UserBlogs';
 import BlogPostDetail from './components/BlogPostDetail';
 import Logout from './components/Logout'; // Import the Logout component
 import UpdatePost from './components/UpdatePost'
+import Settings from './components/Settings';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/logout" element={<Logout />} /> {/* Add route for Logout component */}
                     <Route path="/" element={<BlogPosts />} />
                     <Route path="/update-post/:id" element={<UpdatePost />} />
+                    <Route path="/settings" element={<Settings/>} />
                 </Routes>
             </Container>
         </Router>
