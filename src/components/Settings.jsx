@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Assuming you use react-router for navigation
 import { account, databases } from '../appwriteConfig';
 import { Query } from 'appwrite';
 import { Container, Form, Button } from 'react-bootstrap';
@@ -9,6 +10,7 @@ const Settings = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -41,9 +43,8 @@ const Settings = () => {
 
     const updateBlogAuthors = async (newName) => {
         try {
-            // Fetch all blogs written by the current user
             const response = await databases.listDocuments('667a93ab0015408da08b', '667a93b3003d6bf2802e', [
-                Query.equal('Author', user.name),
+                Query.equal('Author_id', user.$id),
             ]);
 
             const updatePromises = response.documents.map((document) => 

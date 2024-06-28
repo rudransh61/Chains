@@ -91,7 +91,8 @@ const UserBlogs = () => {
                 </Col>
                 <Col md={8}>
                     <h1>My Blogs</h1>
-                    {posts.map((post) => (
+                    
+                    {posts.length > 0 ? posts.map((post) => (
                         <Card key={post.$id} className="mb-3">
                             <Card.Body>
                                 <Card.Title>{post.title}</Card.Title>
@@ -107,12 +108,10 @@ const UserBlogs = () => {
                                 >
                                     Delete
                                 </Button>
-                                <Link to={`/blog/${post.$id}`}>
-                                    <Button className="ms-2" variant="primary" size="sm">Read More</Button>
-                                </Link>
+                                <Button as={Link} to={`/blog/${post.$id}`} className="ms-2" variant="primary" size="sm">Read More</Button>
                             </Card.Body>
                         </Card>
-                    ))}
+                    )) : <p>No posts found</p>}
                 </Col>
             </Row>
         </Container>

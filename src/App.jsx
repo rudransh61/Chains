@@ -11,6 +11,7 @@ import BlogPostDetail from './components/BlogPostDetail';
 import Logout from './components/Logout'; // Import the Logout component
 import UpdatePost from './components/UpdatePost'
 import Settings from './components/Settings';
+import Footer from './components/Footer';
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     <Route path="/settings" element={<Settings/>} />
                 </Routes>
             </Container>
+            <Footer/>
         </Router>
     );
 }
