@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { databases, account } from '../appwriteConfig';
 import { Container, Form, Button } from 'react-bootstrap';
+import { marked } from 'marked'; // Import marked library
 
 const UpdatePost = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
+    const [coverImageUrl, setCoverImageUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -22,6 +24,7 @@ const UpdatePost = () => {
                 } else {
                     setTitle(response.title);
                     setBody(response.body);
+                    setCoverImageUrl(response.image || '');
                     setLoading(false);
                 }
             } catch (error) {
@@ -39,6 +42,7 @@ const UpdatePost = () => {
             await databases.updateDocument('667a93ab0015408da08b', '667a93b3003d6bf2802e', id, {
                 title,
                 body,
+                image: coverImageUrl,
             });
             alert('Post updated successfully!');
             navigate('/my-blogs');
@@ -55,6 +59,12 @@ const UpdatePost = () => {
     if (error) {
         return <div>{error}</div>;
     }
+
+    // Function to convert Markdown to HTML
+    const renderMarkdown = (markdown) => {
+        const html = marked(markdown);
+        return { __html: html };
+    };
 
     return (
         <Container className="mt-5">
@@ -81,8 +91,24 @@ const UpdatePost = () => {
                         required
                     />
                 </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Cover Image URL</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={coverImageUrl}
+                        onChange={(e) => setCoverImageUrl(e.target.value)}
+                        placeholder="Enter cover image URL"
+                    />
+                </Form.Group>
                 <Button variant="primary" type="submit">Update Post</Button>
             </Form>
+            <div className="mt-5">
+                <h3>Markdown Preview</h3>
+                <div
+                    className="preview"
+                    dangerouslySetInnerHTML={renderMarkdown(body)}
+                />
+            </div>
         </Container>
     );
 };

@@ -2,33 +2,37 @@ import React, { useState } from 'react';
 import { databases } from '../appwriteConfig';
 import { getUser } from '../utils/user';
 import { ID } from 'appwrite';
-import { Container, Form, Button } from 'react-bootstrap';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import ReactMarkdown from 'react-markdown';
 
 const AddPost = () => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
+    const [coverImageUrl, setCoverImageUrl] = useState('');
 
     const handleAddPost = async (e) => {
         e.preventDefault();
         try {
             const user = await getUser();
-            // console.log(user)
             if (user) {
-                const response = await databases.createDocument(
+                await databases.createDocument(
                     '667a93ab0015408da08b', 
                     '667a93b3003d6bf2802e', 
                     ID.unique(),
                     {
                         title,
                         body,
+                        image: coverImageUrl, // Add cover image URL here
                         Author: user.name,
                         date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/'),
-                        Author_id : user.$id
-                    },
-                    undefined
+                        Author_id: user.$id
+                    }
                 );
-                // console.log(response);
                 alert('Post added successfully!');
+                // Clear form fields after successful submission
+                setTitle('');
+                setBody('');
+                setCoverImageUrl('');
             }
         } catch (error) {
             console.error(error);
@@ -54,14 +58,35 @@ const AddPost = () => {
                     <Form.Label>Body</Form.Label>
                     <Form.Control
                         as="textarea"
+                        rows={5}
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
                         placeholder="Body"
                         required
                     />
                 </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Cover Image URL</Form.Label>
+                    <Form.Control
+                        type="url"
+                        value={coverImageUrl}
+                        onChange={(e) => setCoverImageUrl(e.target.value)}
+                        placeholder="Cover Image URL"
+                        required
+                    />
+                </Form.Group>
                 <Button variant="primary" type="submit">Add Post</Button>
             </Form>
+            <Row className="mt-5">
+                <Col md={6}>
+                    <h3>Markdown Preview</h3>
+                    <ReactMarkdown>{body}</ReactMarkdown>
+                </Col>
+                <Col md={6}>
+                    <h3>Cover Image Preview</h3>
+                    {coverImageUrl && <img src={coverImageUrl} alt="Cover" style={{ width: '100%' }} />}
+                </Col>
+            </Row>
         </Container>
     );
 };
