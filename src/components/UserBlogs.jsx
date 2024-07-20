@@ -85,6 +85,7 @@ const UserBlogs = () => {
                             <Card.Text><strong>Name:</strong> {userName}</Card.Text>
                             <Card.Text><strong>Email:</strong> {userEmail}</Card.Text>
                             <Card.Text><strong>Total Blogs:</strong> {posts.length}</Card.Text>
+                            
                             {/* You can add more profile details as needed */}
                         </Card.Body>
                     </Card>
@@ -95,8 +96,11 @@ const UserBlogs = () => {
                     {posts.length > 0 ? posts.map((post) => (
                         <Card key={post.$id} className="mb-3">
                             <Card.Body>
+                            {post.image && (
+                                <Card.Img variant="top" src={post.image} alt={post.title} className="h-25 w-25"/>
+                            )}
                                 <Card.Title>{post.title}</Card.Title>
-                                <Card.Text>{post.body}</Card.Text>
+                                <Card.Text>{post.body.slice(0,100)}</Card.Text>
                                 <Card.Text>
                                     <small>{new Date(post.date_time).toISOString().slice(0, 10).replace(/-/g, '/')} | By-{post.Author} | Views: {post.views}</small>
                                 </Card.Text>
@@ -109,6 +113,11 @@ const UserBlogs = () => {
                                     Delete
                                 </Button>
                                 <Button as={Link} to={`/blog/${post.$id}`} className="ms-2" variant="primary" size="sm">Read More</Button>
+                                {
+                                    !post.ispublic && (
+                                        <Button variant="secondary">Private</Button>
+                                    )
+                                }
                             </Card.Body>
                         </Card>
                     )) : <p>No posts found</p>}

@@ -10,6 +10,7 @@ const UpdatePost = () => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImageUrl, setCoverImageUrl] = useState('');
+    const [isPublic, setIsPublic] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -25,6 +26,7 @@ const UpdatePost = () => {
                     setTitle(response.title);
                     setBody(response.body);
                     setCoverImageUrl(response.image || '');
+                    setIsPublic(response.isPublic || false);
                     setLoading(false);
                 }
             } catch (error) {
@@ -43,6 +45,7 @@ const UpdatePost = () => {
                 title,
                 body,
                 image: coverImageUrl,
+                ispublic:isPublic, // Ensure this field matches the state
             });
             alert('Post updated successfully!');
             navigate('/my-blogs');
@@ -98,6 +101,14 @@ const UpdatePost = () => {
                         value={coverImageUrl}
                         onChange={(e) => setCoverImageUrl(e.target.value)}
                         placeholder="Enter cover image URL"
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Check
+                        type="checkbox"
+                        label="Public"
+                        checked={isPublic}
+                        onChange={(e) => setIsPublic(e.target.checked)}
                     />
                 </Form.Group>
                 <Button variant="primary" type="submit">Update Post</Button>

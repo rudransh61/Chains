@@ -12,7 +12,9 @@ const BlogPosts = () => {
         const fetchPosts = async () => {
             try {
                 const response = await databases.listDocuments('667a93ab0015408da08b', '667a93b3003d6bf2802e');
-                setPosts(response.documents.reverse());
+                // Filter posts to only show public posts
+                const publicPosts = response.documents.filter(post => post.ispublic);
+                setPosts(publicPosts.reverse());
             } catch (error) {
                 console.error(error);
             }
@@ -42,8 +44,8 @@ const BlogPosts = () => {
     );
 
     // Filter and sort posts for latest and most viewed sections
-    const latestPosts = filteredPosts; // Latest 5 posts
-    const mostViewedPosts = filteredPosts.slice().sort((a, b) => (b.views || 0) - (a.views || 0)); // Most viewed 5 posts
+    const latestPosts = filteredPosts.slice(0, 5); // Latest 5 posts
+    const mostViewedPosts = filteredPosts.slice().sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5); // Most viewed 5 posts
 
     return (
         <Container className="mt-5">

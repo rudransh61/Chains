@@ -9,6 +9,7 @@ const AddPost = () => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImageUrl, setCoverImageUrl] = useState('');
+    const [isPublic, setIsPublic] = useState(false);
 
     const handleAddPost = async (e) => {
         e.preventDefault();
@@ -25,7 +26,8 @@ const AddPost = () => {
                         image: coverImageUrl, // Add cover image URL here
                         Author: user.name,
                         date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/'),
-                        Author_id: user.$id
+                        Author_id: user.$id,
+                        ispublic : isPublic // Add the isPublic field here
                     }
                 );
                 alert('Post added successfully!');
@@ -33,6 +35,7 @@ const AddPost = () => {
                 setTitle('');
                 setBody('');
                 setCoverImageUrl('');
+                setIsPublic(false);
             }
         } catch (error) {
             console.error(error);
@@ -68,11 +71,19 @@ const AddPost = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>Cover Image URL</Form.Label>
                     <Form.Control
-                        type="url"
+                        type="text"
                         value={coverImageUrl}
                         onChange={(e) => setCoverImageUrl(e.target.value)}
                         placeholder="Cover Image URL"
                         required
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Check
+                        type="checkbox"
+                        label="Publish as public"
+                        checked={isPublic}
+                        onChange={(e) => setIsPublic(e.target.checked)}
                     />
                 </Form.Group>
                 <Button variant="primary" type="submit">Add Post</Button>
