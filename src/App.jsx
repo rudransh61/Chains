@@ -8,10 +8,11 @@ import AddPost from './components/AddPost';
 import BlogPosts from './components/BlogPosts';
 import UserBlogs from './components/UserBlogs';
 import BlogPostDetail from './components/BlogPostDetail';
-import Logout from './components/Logout'; // Import the Logout component
-import UpdatePost from './components/UpdatePost'
+import Logout from './components/Logout';
+import UpdatePost from './components/UpdatePost';
 import Settings from './components/Settings';
 import Footer from './components/Footer';
+import UserProfile from './components/UserProfile'; // Import the UserProfile component
 
 function App() {
     return (
@@ -24,13 +25,14 @@ function App() {
                     <Route path="/add-post" element={<AddPost />} />
                     <Route path="/my-blogs" element={<UserBlogs />} />
                     <Route path="/blog/:id" element={<BlogPostDetail />} />
-                    <Route path="/logout" element={<Logout />} /> {/* Add route for Logout component */}
+                    <Route path="/logout" element={<Logout />} />
                     <Route path="/" element={<BlogPosts />} />
                     <Route path="/update-post/:id" element={<UpdatePost />} />
-                    <Route path="/settings" element={<Settings/>} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/user/:userId" element={<UserProfile />} /> {/* Add route for UserProfile component */}
                 </Routes>
             </Container>
-            <Footer/>
+            <Footer />
         </Router>
     );
 }
