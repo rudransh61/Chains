@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { marked } from 'marked'; // Import marked library
+import { useParams, Link } from 'react-router-dom';
+import { marked } from 'marked';
 import { databases, account } from '../appwriteConfig';
 import { Container, Card, Form, Button, ListGroup } from 'react-bootstrap';
 import {
@@ -16,6 +16,7 @@ const BlogPostDetail = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [userId, setUserId] = useState(null);
+    const [userName, setUserName] = useState(null); // Track user's name
     const [newComment, setNewComment] = useState('');
     const [comments, setComments] = useState([]);
     const [editingComment, setEditingComment] = useState(null);
@@ -25,7 +26,8 @@ const BlogPostDetail = () => {
         const getUser = async () => {
             try {
                 const user = await account.get();
-                setUserId(user.name);
+                setUserId(user.$id);
+                setUserName(user.name); // Set user's name
             } catch (error) {
                 console.error(error);
             }
@@ -51,7 +53,7 @@ const BlogPostDetail = () => {
 
     const handleAddComment = async (e) => {
         e.preventDefault();
-        const updatedComments = [...comments, { user: userId, text: newComment, date: new Date().toISOString() }];
+        const updatedComments = [...comments, { user: userName, text: newComment, date: new Date().toISOString() }];
         try {
             await databases.updateDocument('667a93ab0015408da08b', '667a93b3003d6bf2802e', id, {
                 comments: JSON.stringify(updatedComments),
@@ -168,7 +170,7 @@ const BlogPostDetail = () => {
                         ) : (
                             <>
                                 <p dangerouslySetInnerHTML={renderMarkdown(comment.text)} />
-                                {comment.user === userId && (
+                                {comment.user === userName && ( // Compare with user's name
                                     <div>
                                         <Button variant="warning" size="sm" onClick={() => handleEditComment(index)}>
                                             Edit
@@ -189,20 +191,24 @@ const BlogPostDetail = () => {
                 )) : <p>No comments yet.</p>}
             </ListGroup>
 
-            <Form onSubmit={handleAddComment}>
-                <Form.Group className="mb-3">
-                    <Form.Label>Add a Comment</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Enter your comment"
-                        required
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit">Add Comment</Button>
-            </Form>
+            {userId ? ( // Check if user is logged in
+                <Form onSubmit={handleAddComment}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Add a Comment</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            placeholder="Enter your comment"
+                            required
+                        />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">Add Comment</Button>
+                </Form>
+            ) : (
+                <p>Please <Link to="/login">log in</Link> to add a comment.</p>
+            )}
         </Container>
     );
 };

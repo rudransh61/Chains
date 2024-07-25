@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { account } from '../appwriteConfig';
+import { account, databases } from '../appwriteConfig';
 import { Container, Form, Button } from 'react-bootstrap';
 
 const Signup = () => {
@@ -10,11 +10,19 @@ const Signup = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            await account.create('unique()', email, password, name);
+            // Create user account
+            const user = await account.create('unique()', email, password, name);
+
+            // Add user details to the userdata collection
+            await databases.createDocument('667a93ab0015408da08b', '66a23a28002f30b04ca2', user.$id, {
+                name: user.name,
+                id: user.$id
+            });
+
             alert('Signup successful!');
         } catch (error) {
             console.error(error);
-            alert('Signup failed! (User already exists)');
+            alert('Signup failed! (User already exists or make sure password >= 8 characters long)');
         }
     };
 
@@ -25,7 +33,7 @@ const Signup = () => {
                 <Form.Group className="mb-3">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
-                        type=""
+                        type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Enter name"

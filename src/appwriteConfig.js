@@ -1,4 +1,4 @@
-import { Client, Account, Databases } from 'appwrite';
+import { Client, Account, Databases} from 'appwrite';
 
 const client = new Client();
 
@@ -9,4 +9,4 @@ client
 const account = new Account(client);
 const databases = new Databases(client);
 
-export { client, account, databases };
+export { client, account, databases};

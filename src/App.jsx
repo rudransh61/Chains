@@ -23,13 +23,13 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/add-post" element={<AddPost />} />
-                    <Route path="/my-blogs" element={<UserBlogs />} />
+                    <Route path="/my-blogs" element={<UserProfile />} />
                     <Route path="/blog/:id" element={<BlogPostDetail />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/" element={<BlogPosts />} />
                     <Route path="/update-post/:id" element={<UpdatePost />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/user/:userId" element={<UserProfile />} /> {/* Add route for UserProfile component */}
+                    <Route path="/user/:userId" element={<UserBlogs />} /> {/* Add route for UserProfile component */}
                 </Routes>
             </Container>
             <Footer />
