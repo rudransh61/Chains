@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { databases } from '../appwriteConfig';
 import { Card, ListGroup, Button } from 'react-bootstrap';
 
 const RelatedPosts = ({ keywords, currentPostId }) => {
     const [relatedPosts, setRelatedPosts] = useState([]);
     const parsedKeywords = JSON.parse(keywords);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchRelatedPosts = async () => {
             try {
