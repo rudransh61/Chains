@@ -36,9 +36,16 @@ const RelatedPosts = ({ keywords, currentPostId }) => {
         fetchRelatedPosts();
     }, [parsedKeywords, currentPostId]);
 
-    const handleReadMore = (postId, views) => {
-        // Handle read more action here, e.g., navigate to the post detail page
-        // Increment views or perform other actions if needed
+    
+    const handleReadMore = async (id, views) => {
+        try {
+            await databases.updateDocument('667a93ab0015408da08b', '667a93b3003d6bf2802e', id, {
+                views: views + 1,
+            });
+            navigate(`/blog/${id}`);
+        } catch (error) {
+            console.error('Failed to update views', error);
+        }
     };
 
     return (
