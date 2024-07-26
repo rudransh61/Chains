@@ -10,12 +10,14 @@ const AddPost = () => {
     const [body, setBody] = useState('');
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [isPublic, setIsPublic] = useState(false);
+    const [keywords, setKeywords] = useState('');
 
     const handleAddPost = async (e) => {
         e.preventDefault();
         try {
             const user = await getUser();
             if (user) {
+                const keywordsArray = keywords.split(',').map(keyword => keyword.trim());
                 await databases.createDocument(
                     '667a93ab0015408da08b', 
                     '667a93b3003d6bf2802e', 
@@ -27,7 +29,8 @@ const AddPost = () => {
                         Author: user.name,
                         date_time: new Date().toJSON().slice(0,10).replace(/-/g,'/'),
                         Author_id: user.$id,
-                        ispublic : isPublic // Add the isPublic field here
+                        ispublic : isPublic, // Add the isPublic field here
+                        keywords: JSON.stringify(keywordsArray) // Add keywords as a JSON string
                     }
                 );
                 alert('Post added successfully!');
@@ -36,6 +39,7 @@ const AddPost = () => {
                 setBody('');
                 setCoverImageUrl('');
                 setIsPublic(false);
+                setKeywords('');
             }
         } catch (error) {
             console.error(error);
@@ -76,6 +80,15 @@ const AddPost = () => {
                         onChange={(e) => setCoverImageUrl(e.target.value)}
                         placeholder="Cover Image URL"
                         required
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Keywords</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={keywords}
+                        onChange={(e) => setKeywords(e.target.value)}
+                        placeholder="Comma-separated keywords"
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">

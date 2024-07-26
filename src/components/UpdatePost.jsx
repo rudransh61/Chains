@@ -11,6 +11,7 @@ const UpdatePost = () => {
     const [body, setBody] = useState('');
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [isPublic, setIsPublic] = useState(false);
+    const [keywords, setKeywords] = useState(''); // State for keywords
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -26,7 +27,8 @@ const UpdatePost = () => {
                     setTitle(response.title);
                     setBody(response.body);
                     setCoverImageUrl(response.image || '');
-                    setIsPublic(response.isPublic || false);
+                    setIsPublic(response.ispublic || false);
+                    setKeywords(JSON.parse(response.keywords).join(', ')); // Parse and set keywords
                     setLoading(false);
                 }
             } catch (error) {
@@ -41,11 +43,13 @@ const UpdatePost = () => {
     const handleUpdatePost = async (e) => {
         e.preventDefault();
         try {
+            const keywordsArray = keywords.split(',').map(keyword => keyword.trim());
             await databases.updateDocument('667a93ab0015408da08b', '667a93b3003d6bf2802e', id, {
                 title,
                 body,
                 image: coverImageUrl,
-                ispublic:isPublic, // Ensure this field matches the state
+                ispublic: isPublic, // Ensure this field matches the state
+                keywords: JSON.stringify(keywordsArray), // Add keywords as a JSON string
             });
             alert('Post updated successfully!');
             navigate('/my-blogs');
@@ -101,6 +105,15 @@ const UpdatePost = () => {
                         value={coverImageUrl}
                         onChange={(e) => setCoverImageUrl(e.target.value)}
                         placeholder="Enter cover image URL"
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Keywords</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={keywords}
+                        onChange={(e) => setKeywords(e.target.value)}
+                        placeholder="Comma-separated keywords"
                     />
                 </Form.Group>
                 <Form.Group className="mb-3">

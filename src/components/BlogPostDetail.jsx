@@ -11,6 +11,7 @@ import {
     TwitterIcon,
     LinkedinIcon
 } from 'react-share';
+import RelatedPosts from './RelatedPosts'; // Import the RelatedPosts component
 
 const BlogPostDetail = () => {
     const { id } = useParams();
@@ -209,6 +210,12 @@ const BlogPostDetail = () => {
             ) : (
                 <p>Please <Link to="/login">log in</Link> to add a comment.</p>
             )}
+
+            {/* Render RelatedPosts component */}
+            {post.keywords && <RelatedPosts keywords={post.keywords} currentPostId={post.$id} />}
+            {!post.keywords &&  <Card className="mt-5">
+            <Card.Header>Related Posts</Card.Header>
+            <ListGroup variant="flush"></ListGroup><ListGroup.Item>No related posts found.</ListGroup.Item></Card>}
         </Container>
     );
 };
