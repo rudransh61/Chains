@@ -70,6 +70,7 @@ const UserBlogs = () => {
                             <Card.Title>Profile</Card.Title>
                             <Card.Text><strong>Name:</strong> {user.name}</Card.Text>
                             <Card.Text><strong>Email:</strong> {user.email}</Card.Text>
+                            <Card.Text><strong>Bio:</strong> {user.bio}</Card.Text>
                             <Card.Text><strong>Total Blogs:</strong> {posts.length}</Card.Text>
                             
                             {/* You can add more profile details as needed */}

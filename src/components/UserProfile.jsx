@@ -9,6 +9,7 @@ const UserBlogs = () => {
     const [userId, setUserId] = useState(null);
     const [userEmail, setUserEmail] = useState(null);
     const [userName, setUserName] = useState(null);
+    const [userBio, setUserBio] = useState('');
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
@@ -20,6 +21,15 @@ const UserBlogs = () => {
                 setUserId(user.$id);
                 setUserEmail(user.email);
                 setUserName(user.name);
+
+                const response = await databases.listDocuments('667a93ab0015408da08b', '66a23a28002f30b04ca2', [
+                    Query.equal('id', user.$id),
+                ]);
+
+                if (response.documents.length > 0) {
+                    setUserBio(response.documents[0].bio || '');
+                }
+
             } catch (error) {
                 console.error(error);
             } finally {
@@ -61,6 +71,18 @@ const UserBlogs = () => {
         }
     };
 
+    const handleCopyToClipboard = () => {
+        const profileLink = `https://chainz.netlify.app/user/${userId}`;
+        navigator.clipboard.writeText(profileLink)
+            .then(() => {
+                alert('Profile link copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+                alert('Failed to copy profile link.');
+            });
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -84,21 +106,20 @@ const UserBlogs = () => {
                             <Card.Title>Profile</Card.Title>
                             <Card.Text><strong>Name:</strong> {userName}</Card.Text>
                             <Card.Text><strong>Email:</strong> {userEmail}</Card.Text>
+                            <Card.Text><strong>Bio:</strong> {userBio}</Card.Text>
                             <Card.Text><strong>Total Blogs:</strong> {posts.length}</Card.Text>
-                            
-                            {/* You can add more profile details as needed */}
+                            <Card.Text><strong>Profile Link:</strong> <Button variant="link" onClick={handleCopyToClipboard}>Copy to Clipboard</Button></Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col md={8}>
                     <h1>My Blogs</h1>
-                    
                     {posts.length > 0 ? posts.map((post) => (
                         <Card key={post.$id} className="mb-3">
                             <Card.Body>
-                            {post.image && (
-                                <Card.Img variant="top" src={post.image} alt={post.title} className="h-25 w-25"/>
-                            )}
+                                {post.image && (
+                                    <Card.Img variant="top" src={post.image} alt={post.title} className="h-25 w-25"/>
+                                )}
                                 <Card.Title>{post.title}</Card.Title>
                                 <Card.Text>{post.body.slice(0,100)}</Card.Text>
                                 <Card.Text>
