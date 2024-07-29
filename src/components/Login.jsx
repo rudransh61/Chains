@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { account } from '../appwriteConfig';
 import { Container, Form, Button } from 'react-bootstrap';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const recaptchaRef = useRef(null);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        const captchaValue = recaptchaRef.current.getValue();
+        if (!captchaValue) {
+            alert('Please verify the reCAPTCHA!');
+            return;
+        }
+
         try {
             await account.createEmailPasswordSession(email, password);
             alert('Login successful!');
@@ -41,7 +49,11 @@ const Login = () => {
                         required
                     />
                 </Form.Group>
-                <Button variant="primary" type="submit">Login</Button>
+                <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={import.meta.env.VITE_APP_SITE_KEY}
+                />
+                <Button variant="primary" type="submit" className="mt-3">Login</Button>
             </Form>
         </Container>
     );

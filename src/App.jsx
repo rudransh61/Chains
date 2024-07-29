@@ -13,6 +13,7 @@ import UpdatePost from './components/UpdatePost';
 import Settings from './components/Settings';
 import Footer from './components/Footer';
 import UserProfile from './components/UserProfile'; // Import the UserProfile component
+import UserSearch from './components/UserSearch';
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/add-post" element={<AddPost />} />
                     <Route path="/my-blogs" element={<UserProfile />} />
                     <Route path="/blog/:id" element={<BlogPostDetail />} />
+                    <Route path="/user-search" element={<UserSearch />} />
                     <Route path="/logout" element={<Logout />} />
                     <Route path="/" element={<BlogPosts />} />
                     <Route path="/update-post/:id" element={<UpdatePost />} />
